@@ -24,13 +24,18 @@ namespace Service_Test01
 
         protected override void OnStart(string[] args)
         {
-            //start any threads or http listeners etc
-            HttpClient client = new HttpClient();
+            using (WebApp.Start<ApiStartup>(url: baseAddress))
+            {
+                //start any threads or http listeners etc
+                HttpClient client = new HttpClient();
 
-            var response = client.GetAsync(baseAddress + "api/values").Result;
+                var response = client.GetAsync(baseAddress + "api/video").Result;
 
-            Console.Write(response);
-            Console.Write(response.Content.ReadAsStringAsync().Result);
+                Console.Write(response);
+                Console.Write(response.Content.ReadAsStringAsync().Result);
+
+                Console.ReadLine();
+            }
         }
 
         protected override void OnStop()
@@ -107,5 +112,23 @@ namespace Service_Test01
                 System.ServiceProcess.ServiceBase.Run(new Program());
             }
         }
+        /*
+        static void Main(string[] args)
+        {
+            using (WebApp.Start<ApiStartup>(url: baseAddress))
+            {
+
+
+                HttpClient client = new HttpClient();
+
+                var response = client.GetAsync(baseAddress + "api/video").Result;
+
+                Console.Write(response);
+                Console.Write(response.Content.ReadAsStringAsync().Result);
+            }
+
+            Console.ReadLine();
+        }
+         */
     }
 }
