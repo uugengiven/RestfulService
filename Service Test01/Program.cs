@@ -9,13 +9,16 @@ using System.Reflection;
 using Microsoft.Owin.Hosting;
 using System.Net.Http;
 
+
 namespace Service_Test01
 {
     public class Program : ServiceBase
     {
 
         public static string ServiceName = "OBS API Service";
-        public static string baseAddress = "http://localhost:9000/";
+        public static string baseAddress = "localhost";
+        public static string basePort = "9000";
+        
 
         public Program()
         {
@@ -24,18 +27,13 @@ namespace Service_Test01
 
         protected override void OnStart(string[] args)
         {
-            using (WebApp.Start<ApiStartup>(url: baseAddress))
-            {
-                //start any threads or http listeners etc
-                HttpClient client = new HttpClient();
+            StartOptions options = new StartOptions();
+            // Create multiple urls - 127.0.0.1, machine name and the given name in baseAddress so it responds to all requests - could also use *
+            options.Urls.Add(string.Format("http://{0}:{1}", baseAddress, basePort));
+            options.Urls.Add(string.Format("http://{0}:{1}", "127.0.0.1", basePort));
+            options.Urls.Add(string.Format("http://{0}:{1}", Environment.MachineName, basePort));
 
-                var response = client.GetAsync(baseAddress + "api/video").Result;
-
-                Console.Write(response);
-                Console.Write(response.Content.ReadAsStringAsync().Result);
-
-                Console.ReadLine();
-            }
+            WebApp.Start<ApiStartup>(options);
         }
 
         protected override void OnStop()
@@ -112,23 +110,5 @@ namespace Service_Test01
                 System.ServiceProcess.ServiceBase.Run(new Program());
             }
         }
-        /*
-        static void Main(string[] args)
-        {
-            using (WebApp.Start<ApiStartup>(url: baseAddress))
-            {
-
-
-                HttpClient client = new HttpClient();
-
-                var response = client.GetAsync(baseAddress + "api/video").Result;
-
-                Console.Write(response);
-                Console.Write(response.Content.ReadAsStringAsync().Result);
-            }
-
-            Console.ReadLine();
-        }
-         */
     }
 }

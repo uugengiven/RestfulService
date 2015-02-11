@@ -7,10 +7,11 @@ using System.ServiceProcess;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace Service_Test01
 {
     [RunInstaller(true)]
-    class CustomServiceInstaller : Installer
+    public class CustomServiceInstaller : Installer
     {
         private ServiceProcessInstaller process;
         private ServiceInstaller service;

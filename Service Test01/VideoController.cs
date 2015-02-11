@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Web.Http;
+using System.Net.Http;
+using System.Diagnostics;
 
 namespace Service_Test01
 {
@@ -8,7 +10,18 @@ namespace Service_Test01
         // GET api
         public IEnumerable<string> Get()
         {
-            return new string[] { "value1", "value2" };
+            // do some stuff
+            Process proc = new Process();
+
+            proc.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            proc.StartInfo.WorkingDirectory = "c:\\OBS";
+            proc.StartInfo.FileName = "c:\\OBS\\obs.exe";
+            proc.StartInfo.Arguments = @"-start -multi -portable";
+            proc.StartInfo.UseShellExecute = true;
+
+            proc.Start();
+
+            return new string[] { "value1", "value2", proc.Id.ToString() };
         }
 
         public string Get(int id)
@@ -17,9 +30,21 @@ namespace Service_Test01
         }
 
         // POST to api/video
-        public void Post([FromBody]string value)
+        public string Post([FromBody]string value)
         {
             // do some stuff
+            Process proc = new Process();
+            
+            proc.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            proc.StartInfo.WorkingDirectory = "c:\\OBS";
+            proc.StartInfo.FileName = "c:\\OBS\\obs.exe";
+            proc.StartInfo.Arguments = @"-start -multi -portable";
+            proc.StartInfo.UseShellExecute = true;
+
+            proc.Start();
+
+
+            return proc.Id.ToString();
         }
     }
 }
